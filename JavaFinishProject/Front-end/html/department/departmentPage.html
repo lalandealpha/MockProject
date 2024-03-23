@@ -1,0 +1,250 @@
+<div class="dlv-container">
+    <div class="dlv-heading">
+        DEPARTMENT LIST
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-wrapper">
+        <div class="filter-item">
+            <label for="min-date">Min Date</label>
+            <input type="date" id="filter-min-date-select">
+        </div>
+        <div class="filter-item">
+            <label for="min-date">Max Date</label>
+            <input type="date" id="filter-max-date-select">
+        </div>
+        <div class="filter-item" id="filter-item-type">
+            <select name="" id="filter-type-select" style="width:130px;" class="operator">
+                <option value=""></option> <!-- Default value-->
+                <option value="All Types">All Types</option>
+                <option value="PM">PM</option>
+                <option value="SCRUM_MASTER">Scrum Master</option>
+                <option value="DEV">Developer</option>
+                <option value="TEST">Test</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <a href="#" data-toggle="tooltip" title="Filter" onclick="filterDepartment()">
+                <i class="fa-solid fa-filter"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="dlv-table">
+        <div class="table-wrapper department-accounts-table-wrapper">
+            <div class="function-bar">
+
+                <!-- Search -->
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input class="form-control" type="text" id="search-department-input" placeholder="Search by name..." data-toggle="tooltip">
+                </div>
+                <div class="add-sync-del-btn">
+                    <a href="#" data-toggle="tooltip" title="Refresh" onclick="refreshDepartmentTable()">
+                        <i class="fas fa-sync"></i>
+                    </a>
+                    <a href="#" data-toggle="tooltip" title="Add" onclick="openAddDepartmentModal()">
+                        <i class="fa-solid fa-square-plus"></i>
+                    </a>
+                    <a href="#" data-toggle="tooltip" title="Delete" onclick="showDeleteMultipleDepartmentsModal()">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </a>
+                </div>
+            </div>
+            <table class="table table-striped table-hover" id="department-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">
+                            <span class="department-checkbox" style="margin-left: 5px;">
+                                <input type="checkbox" id="department-checkbox-all" name="checkbox-all" onclick="onChangeDepartmentCheckboxAll()">
+                                <label></label>
+                            </span>
+                        </th>
+                        <th style="width: auto;" id="th-name">
+                            <a href="#" onclick="changeDepartmentSort('name')">
+                                Name 
+                                <i id="name-sort" class="fa-solid"></i>
+                            </a>
+                        </th>
+                        <th style="width: 18%;" id="th-totalMember">
+                            <a href="#" onclick="changeDepartmentSort('totalMember')">
+                                Total member 
+                                <i id="totalMember-sort" class="fa-solid"></i>
+                            </a>
+                        </th>
+                        <th style="width: 18%;">
+                            Type
+                        </th>
+                        <th style="width: 18%;" id="th-createDate">
+                            <a href="#" onclick="changeDepartmentSort('createDate')">
+                                Create Date
+                                <i id="createDate-sort" class="fa-solid"></i>
+                            </a>
+                        </th>
+                        <th style="width: 145px;" id="th-actions">
+                            Actions
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+
+            </table>
+
+            <div class="page-nav">
+                <input type="button" value="Previous" id="department-previousPage-btn" onclick="prevDepartmentPage()">
+                <div class="page-info" id="department-page-info">
+
+                </div>
+                <input type="button" value="Next" id="department-nextPage-btn" onclick="nextDepartmentPage()">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add and Update Department modal HTML -->
+    <div class="modal fade" id="addAndUpdateDepartmentModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="addAndUpdateDepartment-modal-title" style="text-align: center; font-size: 25px;">
+                        Title
+                    </h4>
+                </div>
+                <div class="modal-body" id="addAdnUpdateDepartmentModalBody">
+                    <input type="hidden" id="department-id" name="id" value="">
+                    <div class="input-item">
+                        <label for="department-name"><b>Name:</b></label>
+                        <input class="form-control" type="text" placeholder="Department Name" name="department-name" id="modal-department-name" required>
+                        <div id="modal-input-errMess-departmentName" class="input-errMess"></div>
+                    </div>
+
+                    <div class="input-item" id="input-item-type">
+                        <label for="type" id="type-label"><b>Type:</b></label>
+                        <select class="form-control" name="type" id="modal-type-select">
+                                <option value=""></option> <!-- Default value-->
+                                <option value="PM">PM</option>
+                                <option value="SCRUM_MASTER">Scrum Master</option>
+                                <option value="DEV">Developer</option>
+                                <option value="TEST">Test</option>
+                            </select>
+                        <div id="modal-input-errMess-type" class="input-errMess"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default addAccountToDept-btn" id="add-account-btn" onclick="openAddAccountsToNewDepartmentModal()" style="margin-right: 228px;">Add Account</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default save-btn" onclick="saveDepartment()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete multiple departments modal HTML -->
+    <div class="modal fade" id="deleteMultipleDepartmentsModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="text-align: center; font-size: 24px;">Delete Department</h4>
+                </div>
+                <div class="modal-body" id="delete-departments-confirm-mess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="delete-multiple-departments-btn" type="button" class="btn btn-default delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Single Department delete modal HTML -->
+    <div class="modal fade" id="deleteSingleDepartmentModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="text-align: center; font-size: 24px;">Delete Deparment</i>
+                    </h4>
+                </div>
+                <input type="hidden" id="delete-single-department-id" name="id" value="">
+                <div class="modal-body" id="delete-single-department-confirm-mess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="delete-single-department-btn" type="button" class="btn btn-default delete-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Account to Department modal HTML -->
+    <div class="modal fade" id="addAccountsToDepartmentModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="addAccountToDepartment-modal-title" style="text-align: center; font-size: 25px;">
+
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="addAccountToDepartmentModal-department-id" name="id" value="">
+                    <table class="table table-striped table-hover" id="modal-accounts-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">
+                                    <span class="modal-accounts-checkbox" style="margin-left: 5px;">
+                                        <input type="checkbox" id="modal-accounts-checkbox-all" name="checkbox-all"
+                                            onclick="onChangeModalAccountCheckboxAll()">
+                                        <label></label>
+                                    </span>
+                                </th>
+                                <th style="width: 30%;" id="modal-accounts-th-username">
+                                    <a href="#" onclick="changeModalAccountSorting('username')">
+                                            Username 
+                                            <i class="fa-solid fa-sort" id="modal-username-sort"></i>
+                                        </a>
+                                </th>
+                                <th style="width: auto;" id="modal-accounts-th-full-name">
+                                    <a href="#" onclick="changeModalAccountSorting('fullName')">
+                                            Full Name 
+                                            <i class="fa-solid fa-sort" id="modal-fullname-sort"></i>
+                                        </a>
+                                </th>
+                                <th style="width: 18%;">
+                                    Role
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                    </table>
+
+                    <div class="page-nav">
+                        <input type="button" value="Previous" id="modal-account-prevPage-btn" onclick="prevModalAccountPage()">
+                        <div class="page-info" id='modal-accounts-page-info'>
+
+                        </div>
+                        <input type="button" value="Next" id="modal-account-nextPage-btn" onclick="nextModalAccountPage()">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default save-btn" id="accounts-to-department-save-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
